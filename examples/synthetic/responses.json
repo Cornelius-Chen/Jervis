@@ -1,0 +1,85 @@
+{
+  "source_selection": {
+    "work_ids": ["fictional-studio"], "method_ids": ["grouped-action-note"],
+    "reason": "Compare two original fictional arrangements for one task.", "rejected": []
+  },
+  "contact": {
+    "observed_artifact": ["Two choices appear as separate cards in the local reference image."],
+    "author_claims": ["The self-authored note proposes keeping each action near its details."],
+    "model_hypotheses": ["Grouping may help associate one action with one choice."],
+    "unseen_or_uncertain": ["No human preference or comprehension measurement exists."],
+    "practice_instruction": "Create a full original community workshop page with the action inside its choice card.",
+    "comparison_question": "Does moving one action change its visual relationship with its choice?",
+    "variant_instruction": "Keep the same content and function but move the action below both cards.",
+    "held_constant": ["Task content", "Available sessions", "Button behavior"]
+  },
+  "practice": {"html": "$PRACTICE_HTML", "used_capability_ids": [], "limitations": ["Synthetic replay output; no user study"]},
+  "variant": {"html": "$VARIANT_HTML", "used_capability_ids": [], "limitations": ["Synthetic replay output; no user study"]},
+  "comparison": {
+    "observed_differences": ["The action is inside the first card in one page and below both cards in the other."],
+    "model_judgment": "The grouped action may clarify its relationship to the first choice.",
+    "outcome": "different", "hypothesis_status": "supported_in_example",
+    "reason": "A visual relation was observed in the two rendered pages; human effect remains unknown.",
+    "scope_change": "Only consider this relation for pages with distinct choices and associated actions.",
+    "model": {"judgments": [{
+      "id": "choice-action-group", "title": "Keep a choice's action with its details",
+      "representations": [
+        {"kind": "relation", "content": "An action and its associated choice share one visible group.", "evidence_refs": ["$SOURCE"]},
+        {"kind": "operation", "content": "Move the action into the relevant choice group, then inspect the whole page.", "evidence_refs": ["$SOURCE"]}
+      ],
+      "applies_when": ["Several distinct choices have associated actions"],
+      "fails_when": ["Dense operational data tables where actions affect the whole table"],
+      "observe": ["Action-to-choice visual association"],
+      "operations": ["Place action in the relevant choice group"],
+      "source_refs": ["$SOURCE"],
+      "limitations": ["Synthetic model replay; no human evidence"]
+    }]},
+    "decision": "experimental", "unknowns": ["Human comprehension and preference remain unmeasured"]
+  },
+  "fit_use": {
+    "selected_ids": ["choice-action-group"], "not_applicable": [],
+    "reason": "The new task presents distinct workshop choices with associated actions.",
+    "action_changes": ["Keep each choice's action with its details."],
+    "observation_changes": ["Check whether action and choice remain visibly associated."],
+    "example_refs": []
+  },
+  "fit_reject": {
+    "selected_ids": [], "not_applicable": ["choice-action-group: table-wide action"],
+    "reason": "The dispatch view is a dense operational table; the action concerns the whole table.",
+    "action_changes": [], "observation_changes": [], "example_refs": []
+  },
+  "page_use": {"html": "$PRACTICE_HTML", "used_capability_ids": [], "limitations": ["Synthetic worker response"]},
+  "page_reject": {"html": "$DISPATCH_HTML", "used_capability_ids": [], "limitations": ["Synthetic worker response"]},
+  "semantic_use": {
+    "passed": true, "violations": [], "unknowns": [],
+    "summary": "The synthetic page contains the two named choices and an expanding detail control.",
+    "interaction_plan": [
+      {"action": "click", "selector": "[data-action='show-all']", "value": ""},
+      {"action": "assert_text", "selector": "#details", "value": "All sessions: planter and repair clinic"}
+    ],
+    "interaction_coverage": "Checks only the sample detail expansion."
+  },
+  "semantic_reject": {
+    "passed": true, "violations": [], "unknowns": [],
+    "summary": "The synthetic dispatch table lists both sessions and a table-wide detail control.",
+    "interaction_plan": [
+      {"action": "click", "selector": "[data-action='show-all']", "value": ""},
+      {"action": "assert_text", "selector": "#details", "value": "Both sessions are ready for review"}
+    ],
+    "interaction_coverage": "Checks only the sample detail expansion."
+  },
+  "visual_use": {
+    "observed_artifact": ["Two choices are visible in separate cards."],
+    "model_judgment": "The action appears within the first choice group.",
+    "violations": [], "revision_needed": false, "revision_instruction": "",
+    "judgment_scope_review": ["Applies to the choice page only."],
+    "unknowns": ["Human comprehension and preference remain unmeasured"]
+  },
+  "visual_reject": {
+    "observed_artifact": ["A dense dispatch table and one table-wide action are visible."],
+    "model_judgment": "The card-specific judgment was correctly withheld.",
+    "violations": [], "revision_needed": false, "revision_instruction": "",
+    "judgment_scope_review": ["The choice-card judgment does not fit this table."],
+    "unknowns": ["Human comprehension and preference remain unmeasured"]
+  }
+}

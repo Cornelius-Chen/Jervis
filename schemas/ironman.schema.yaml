@@ -1,0 +1,2851 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://local.ironman/schemas/ironman.schema.yaml
+title: IRONMAN Canonical Contracts
+description: Canonical machine-readable contracts for IRONMAN v1.2. All per-object wrapper schemas reference this file.
+$defs:
+  ObjectEnvelope:
+    type: object
+    properties:
+      object_id: &id001
+        type: string
+        minLength: 1
+      object_type: *id001
+      human_name: &id004
+        type: string
+      version: &id005
+        type: string
+        pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$
+      semantic_owner: *id001
+      lifecycle_state: &id006
+        type: string
+        enum:
+        - raw
+        - quarantine
+        - candidate
+        - accepted
+        - stable
+        - canonical
+        - deprecated
+        - retired
+        - rejected
+      created_at: &id002
+        type: string
+        format: date-time
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: &id007
+        type: array
+        items: &id003
+          type: string
+          minLength: 1
+      parent_ids: &id008
+        type: array
+        items: *id003
+        uniqueItems: true
+      root_origin_id: *id003
+      tags: &id009
+        type: array
+        items:
+          type: string
+        uniqueItems: true
+      visibility: &id010
+        type: string
+        enum:
+        - private
+        - restricted
+        - project
+        - shared
+      content_ref: &id011
+        type: string
+      content_hash: &id013
+        type: string
+      status_reason: &id012
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    additionalProperties: true
+    description: Common immutable identity and lifecycle envelope.
+  SourceEvidence:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id001
+      status_reason: *id012
+      source_type:
+        type: string
+        enum:
+        - webpage
+        - video
+        - audio
+        - image
+        - repo
+        - paper
+        - post
+        - book
+        - conversation
+        - dataset
+        - product
+        - other
+      source_locator: *id001
+      creator_or_org:
+        type: string
+      published_at: *id002
+      captured_at: *id002
+      version_or_commit:
+        type: string
+      usage_status:
+        type: string
+        enum:
+        - unknown
+        - review_required
+        - permitted
+        - restricted
+        - prohibited
+      license:
+        type: string
+      discovery_reason: *id001
+      discovery_channel: *id001
+      raw_content_ref: *id001
+      freshness_review_at: *id002
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - source_type
+    - source_locator
+    - captured_at
+    - usage_status
+    - discovery_reason
+    - discovery_channel
+    - raw_content_ref
+    - content_hash
+    additionalProperties: false
+  Capability:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      job_to_be_done: *id001
+      task_families:
+        type: array
+        items: *id001
+        minItems: 1
+        uniqueItems: true
+      applies_when:
+        type: array
+        items: &id014
+          type: object
+          properties:
+            field: *id001
+            operator:
+              type: string
+              enum:
+              - eq
+              - neq
+              - in
+              - not_in
+              - gt
+              - gte
+              - lt
+              - lte
+              - exists
+              - matches
+              - custom
+            value: {}
+          required:
+          - field
+          - operator
+          additionalProperties: false
+        minItems: 1
+      fails_when:
+        type: array
+        items: *id014
+        minItems: 1
+      input_contract:
+        type: string
+      output_contract:
+        type: string
+      required_context:
+        type: array
+        items: *id001
+        uniqueItems: true
+      required_tools:
+        type: array
+        items: *id003
+        uniqueItems: true
+      model_preferences:
+        type: array
+        items: *id001
+        uniqueItems: true
+      permission_scope:
+        type: array
+        items: *id001
+        uniqueItems: true
+      eval_suite_refs:
+        type: array
+        items: *id003
+        minItems: 1
+        uniqueItems: true
+      performance_profile:
+        type: object
+      known_failure_modes:
+        type: array
+        items: *id001
+        minItems: 1
+        uniqueItems: true
+      conflicts_with:
+        type: array
+        items: *id003
+        uniqueItems: true
+      cost_profile:
+        type: object
+      latency_profile:
+        type: object
+      last_verified_at: *id002
+      last_used_at: *id002
+      usage_count:
+        type: integer
+        minimum: 0
+      rollback_target:
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - job_to_be_done
+    - task_families
+    - applies_when
+    - fails_when
+    - input_contract
+    - output_contract
+    - eval_suite_refs
+    - known_failure_modes
+    additionalProperties: false
+  Relation:
+    type: object
+    properties:
+      edge_id: *id001
+      source_id: *id003
+      relation_type:
+        type: string
+        enum:
+        - derived_from
+        - supports
+        - contradicts
+        - abstracts
+        - generalizes
+        - specializes
+        - requires
+        - composes_with
+        - applies_to
+        - fails_when
+        - supersedes
+        - validated_by
+        - used_in
+        - correlated_with_success
+        - contributed_to
+        - caused_improvement
+        - blocked_by
+        - produced
+      target_id: *id003
+      confidence:
+        type: number
+        minimum: 0
+        maximum: 1
+      created_at: *id002
+      created_by: *id001
+      provenance_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      valid_from: *id002
+      valid_to: *id002
+      notes:
+        type: string
+    required:
+    - edge_id
+    - source_id
+    - relation_type
+    - target_id
+    - created_at
+    - created_by
+    - provenance_refs
+    additionalProperties: false
+  TaskContract:
+    type: object
+    properties:
+      task_id: *id001
+      mission_id:
+        type: string
+      goal: *id001
+      primary_domain: *id001
+      support_domains:
+        type: array
+        items: *id001
+        uniqueItems: true
+      task_family: *id001
+      task_stage:
+        type: string
+      inputs:
+        type: object
+      required_outputs:
+        type: array
+        items:
+          type: object
+          properties:
+            name: *id001
+            schema_ref:
+              type: string
+            required:
+              type: boolean
+          required:
+          - name
+          additionalProperties: false
+        minItems: 1
+      hard_constraints:
+        type: array
+        items: *id001
+      soft_preferences:
+        type: array
+        items: *id001
+      anti_patterns:
+        type: array
+        items: *id001
+      required_evidence:
+        type: array
+        items: *id001
+      privacy_level:
+        type: string
+        enum:
+        - public
+        - internal
+        - sensitive
+        - restricted
+      risk_tier: &id018
+        type: string
+        enum:
+        - T0
+        - T1
+        - T2
+        - T3
+        - T4
+      quality_target:
+        type: object
+      cost_budget:
+        type: object
+      latency_budget:
+        type: object
+      acceptance_tests:
+        type: array
+        items: &id015
+          type: object
+          properties:
+            test_id: *id001
+            kind:
+              type: string
+              enum:
+              - deterministic
+              - execution
+              - behavioral
+              - human_blind
+              - model_grader
+              - market
+              - policy
+            command:
+              type: string
+            grader_ref:
+              type: string
+            pass_condition:
+              type: string
+            weight:
+              type: number
+              minimum: 0
+          required:
+          - test_id
+          - kind
+          - pass_condition
+          additionalProperties: false
+        minItems: 1
+      escalation_conditions:
+        type: array
+        items: *id014
+    required:
+    - task_id
+    - goal
+    - primary_domain
+    - task_family
+    - required_outputs
+    - hard_constraints
+    - risk_tier
+    - acceptance_tests
+    additionalProperties: false
+  Mission:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      mission_id: *id001
+      intent: *id001
+      strategic_reason: *id001
+      verified_outcome_definition: *id001
+      baseline:
+        type: object
+      human_authority_boundaries:
+        type: array
+        items: *id001
+        minItems: 1
+      project_overlay_ref:
+        type: string
+      task_ids:
+        type: array
+        items: *id001
+        uniqueItems: true
+      dependency_edges:
+        type: array
+        items: *id001
+        uniqueItems: true
+      status:
+        type: string
+        enum:
+        - proposed
+        - active
+        - blocked
+        - verifying
+        - complete
+        - failed
+        - stopped
+      human_minutes:
+        type: number
+        minimum: 0
+      cost:
+        type: object
+      started_at: *id002
+      completed_at: *id002
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - mission_id
+    - intent
+    - verified_outcome_definition
+    - human_authority_boundaries
+    - status
+    additionalProperties: false
+  Trace:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      trace_id: *id001
+      mission_id: *id001
+      task_id: *id001
+      actor: *id001
+      model_ref:
+        type: string
+      capability_versions:
+        type: array
+        items: *id001
+      tool_versions:
+        type: array
+        items: *id001
+      context_packet_hash:
+        type: string
+      started_at: *id002
+      ended_at: *id002
+      events:
+        type: array
+        items:
+          type: object
+          properties:
+            event_id: *id001
+            event_type: *id001
+            occurred_at: *id002
+            actor: *id001
+            payload_ref:
+              type: string
+            payload_hash:
+              type: string
+            redaction_state:
+              type: string
+              enum:
+              - none
+              - redacted
+              - pointer_only
+          required:
+          - event_id
+          - event_type
+          - occurred_at
+          - actor
+          additionalProperties: false
+        minItems: 1
+      artifacts:
+        type: array
+        items: *id003
+      verification_refs:
+        type: array
+        items: *id003
+      permission_decisions:
+        type: array
+        items: *id003
+      human_intervention_refs:
+        type: array
+        items: *id003
+      token_cost:
+        type: object
+      financial_cost:
+        type: number
+        minimum: 0
+      latency_ms:
+        type: integer
+        minimum: 0
+      final_status:
+        type: string
+        enum:
+        - running
+        - success
+        - failure
+        - escalated
+        - rolled_back
+      failure_stage:
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - trace_id
+    - mission_id
+    - task_id
+    - actor
+    - started_at
+    - events
+    - final_status
+    additionalProperties: false
+  EvalCase:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      eval_case_id: *id001
+      domain: *id001
+      task_contract:
+        $ref: '#/$defs/TaskContract'
+      fixture_refs:
+        type: array
+        items: *id003
+      expected_properties:
+        type: object
+      grader_spec:
+        type: array
+        items: *id015
+        minItems: 1
+      split:
+        type: string
+        enum:
+        - train_example
+        - dev
+        - held_out
+        - regression
+        - adversarial
+        - market
+      leakage_controls:
+        type: array
+        items: *id001
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - eval_case_id
+    - domain
+    - task_contract
+    - grader_spec
+    - split
+    additionalProperties: false
+  EvalResult:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      eval_run_id: *id001
+      target_ref: *id003
+      baseline_ref:
+        type: string
+      eval_case_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      scores:
+        type: object
+      pass_state:
+        type: string
+        enum:
+        - pass
+        - fail
+        - inconclusive
+      confidence_interval:
+        type: object
+      regressions:
+        type: array
+        items: *id001
+      failures:
+        type: array
+        items: *id001
+      cost:
+        type: object
+      executed_at: *id002
+      grader_versions:
+        type: array
+        items: *id001
+      raw_result_ref:
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - eval_run_id
+    - target_ref
+    - eval_case_refs
+    - scores
+    - pass_state
+    - executed_at
+    additionalProperties: false
+  VerificationResult:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      verification_id: *id001
+      task_id: *id001
+      artifact_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      acceptance_test_results:
+        type: array
+        items:
+          type: object
+          properties:
+            test_id: *id001
+            status:
+              type: string
+              enum:
+              - pass
+              - fail
+              - blocked
+            evidence_ref:
+              type: string
+            notes:
+              type: string
+          required:
+          - test_id
+          - status
+          additionalProperties: false
+        minItems: 1
+      policy_violations:
+        type: array
+        items: *id001
+      overall_status:
+        type: string
+        enum:
+        - pass
+        - fail
+        - blocked
+      verifier_actor: *id001
+      verified_at: *id002
+      independence_statement: *id001
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - verification_id
+    - task_id
+    - artifact_refs
+    - acceptance_test_results
+    - overall_status
+    - verifier_actor
+    - verified_at
+    - independence_statement
+    additionalProperties: false
+  Artifact:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id001
+      status_reason: *id012
+      artifact_id: *id001
+      artifact_kind:
+        type: string
+        enum:
+        - code
+        - document
+        - dataset
+        - design
+        - video
+        - audio
+        - model
+        - report
+        - deployment
+        - other
+      uri: *id001
+      producer_trace_ref: *id003
+      acceptance_contract_ref:
+        type: string
+      verification_ref:
+        type: string
+      reproducibility_refs:
+        type: array
+        items: *id001
+      retention_class:
+        type: string
+        enum:
+        - ephemeral
+        - project
+        - durable
+        - canonical
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - artifact_id
+    - artifact_kind
+    - uri
+    - content_hash
+    - producer_trace_ref
+    - retention_class
+    additionalProperties: false
+  HumanIntervention:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      intervention_id: *id001
+      mission_id: *id001
+      task_id: *id001
+      intervention_type:
+        type: string
+        enum:
+        - constitutional_choice
+        - strategic_choice
+        - taste_choice
+        - factual_correction
+        - implementation_fix
+        - capability_gap
+        - permission_approval
+        - risk_escalation
+      human_minutes:
+        type: number
+        minimum: 0
+      attention_interruptions:
+        type: integer
+        minimum: 0
+      description: *id001
+      before_state_ref:
+        type: string
+      after_state_ref:
+        type: string
+      recurring_signature:
+        type: string
+      capability_gap_ref:
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - intervention_id
+    - mission_id
+    - task_id
+    - intervention_type
+    - human_minutes
+    - description
+    additionalProperties: false
+  CapabilityGap:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      gap_id: *id001
+      mission_id:
+        type: string
+      desired_outcome: *id001
+      failed_stage: *id001
+      evidence_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      current_closest_capabilities:
+        type: array
+        items: *id003
+      insufficiency_reason: *id001
+      search_queries:
+        type: array
+        items: *id001
+      target_domains:
+        type: array
+        items: *id001
+        minItems: 1
+      priority:
+        type: string
+        enum:
+        - low
+        - medium
+        - high
+        - critical
+      status:
+        type: string
+        enum:
+        - open
+        - researching
+        - candidate_found
+        - evaluating
+        - resolved
+        - rejected
+      resolution_capability_ref:
+        type: string
+      expected_value_of_information:
+        type: number
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - gap_id
+    - desired_outcome
+    - failed_stage
+    - evidence_refs
+    - insufficiency_reason
+    - target_domains
+    - priority
+    - status
+    additionalProperties: false
+  ProjectOverlay:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      project_id: *id001
+      objectives:
+        type: array
+        items: *id001
+        minItems: 1
+      constraints:
+        type: array
+        items: *id001
+      terminology:
+        type: object
+      decisions:
+        type: array
+        items: *id003
+      repo_refs:
+        type: array
+        items: *id001
+      file_refs:
+        type: array
+        items: *id001
+      local_preferences:
+        type: array
+        items: *id001
+      allowed_domains:
+        type: array
+        items: *id001
+        minItems: 1
+        uniqueItems: true
+      allowed_capabilities:
+        type: array
+        items: *id003
+      forbidden_capabilities:
+        type: array
+        items: *id003
+      mission_refs:
+        type: array
+        items: *id003
+      trace_refs:
+        type: array
+        items: *id003
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - project_id
+    - objectives
+    - constraints
+    - decisions
+    - allowed_domains
+    additionalProperties: false
+  DomainManifest:
+    type: object
+    properties:
+      domain_id: *id001
+      purpose: *id001
+      jobs_to_be_done:
+        type: array
+        items: *id001
+        minItems: 1
+      non_goals:
+        type: array
+        items: *id001
+        minItems: 1
+      semantic_owner: *id001
+      allowed_object_types:
+        type: array
+        items: *id001
+      external_outcome_metrics:
+        type: array
+        items: *id001
+        minItems: 1
+      baseline_definition:
+        type: object
+      primary_eval_suites:
+        type: array
+        items: *id003
+      autonomy_ceiling: &id017
+        type: string
+        enum:
+        - L0
+        - L1
+        - L2
+        - L3
+        - L4
+        - L5
+      inbound_interfaces:
+        type: array
+        items: *id001
+      outbound_interfaces:
+        type: array
+        items: *id001
+      sensitive_permissions:
+        type: array
+        items: *id001
+      escalation_rules:
+        type: array
+        items: *id001
+    required:
+    - domain_id
+    - purpose
+    - jobs_to_be_done
+    - non_goals
+    - external_outcome_metrics
+    - baseline_definition
+    - primary_eval_suites
+    - autonomy_ceiling
+    additionalProperties: false
+  PromotionRecord:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      target_object_id: *id003
+      from_state: *id006
+      to_state: *id006
+      target_version: *id005
+      evidence_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      eval_result_refs:
+        type: array
+        items: *id003
+      decision_actor: *id001
+      decision_reason: *id001
+      approved_at: *id002
+      rollback_target: *id001
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - target_object_id
+    - from_state
+    - to_state
+    - target_version
+    - evidence_refs
+    - decision_actor
+    - decision_reason
+    - approved_at
+    - rollback_target
+    additionalProperties: false
+  WorldClaim:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      claim_id: *id001
+      claim_type: &id016
+        type: string
+        enum:
+        - fact
+        - estimate
+        - interpretation
+        - causal_hypothesis
+        - forecast
+        - preference
+        - normative_judgment
+      statement: *id001
+      scope: *id001
+      valid_time_start: *id002
+      valid_time_end: *id002
+      observed_at: *id002
+      evidence_for:
+        type: array
+        items: *id003
+      evidence_against:
+        type: array
+        items: *id003
+      confidence:
+        type: number
+        minimum: 0
+        maximum: 1
+      freshness_status:
+        type: string
+        enum:
+        - current
+        - stale
+        - expired
+        - unknown
+      review_at: *id002
+      supersedes_claim_ref:
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - claim_id
+    - claim_type
+    - statement
+    - scope
+    - observed_at
+    - confidence
+    - freshness_status
+    additionalProperties: false
+  Hypothesis:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      hypothesis_id: *id001
+      statement: *id001
+      scope: *id001
+      supporting_evidence:
+        type: array
+        items: *id003
+      opposing_evidence:
+        type: array
+        items: *id003
+      confidence:
+        type: number
+        minimum: 0
+        maximum: 1
+      expected_observations:
+        type: array
+        items: *id001
+        minItems: 1
+      falsification_conditions:
+        type: array
+        items: *id001
+        minItems: 1
+      review_at: *id002
+      actual_outcome_refs:
+        type: array
+        items: *id003
+      calibration_score:
+        type: number
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - hypothesis_id
+    - statement
+    - scope
+    - confidence
+    - expected_observations
+    - falsification_conditions
+    - review_at
+    additionalProperties: false
+  SourceReliability:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      source_ref: *id003
+      domain: *id001
+      claim_type: *id016
+      time_horizon: *id001
+      sample_size:
+        type: integer
+        minimum: 0
+      accuracy_metrics:
+        type: object
+      calibration_metrics:
+        type: object
+      incentive_notes:
+        type: string
+      correction_behavior:
+        type: string
+      last_updated_at: *id002
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - source_ref
+    - domain
+    - claim_type
+    - time_horizon
+    - sample_size
+    - accuracy_metrics
+    - last_updated_at
+    additionalProperties: false
+  ToolAdapter:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      tool_id: *id001
+      adapter_type:
+        type: string
+        enum:
+        - function
+        - mcp
+        - api
+        - cli
+        - library
+        - remote_agent
+        - other
+      contract_ref: *id001
+      permissions:
+        type: array
+        items: *id001
+      network_scope:
+        type: array
+        items: *id001
+      filesystem_scope:
+        type: array
+        items: *id001
+      secret_refs:
+        type: array
+        items: *id001
+      license:
+        type: string
+      version_pin: *id001
+      sandbox_required:
+        type: boolean
+      smoke_test_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      rollback_procedure: *id001
+      health_status:
+        type: string
+        enum:
+        - unknown
+        - healthy
+        - degraded
+        - blocked
+        - retired
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - tool_id
+    - adapter_type
+    - contract_ref
+    - permissions
+    - version_pin
+    - sandbox_required
+    - smoke_test_refs
+    - rollback_procedure
+    - health_status
+    additionalProperties: false
+  ContextPacket:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      packet_id: *id001
+      task_contract_ref: *id003
+      project_overlay_ref:
+        type: string
+      selected_capability_versions:
+        type: array
+        items: *id001
+        minItems: 1
+      selected_evidence_refs:
+        type: array
+        items: *id003
+      tool_contract_refs:
+        type: array
+        items: *id001
+      acceptance_tests:
+        type: array
+        items: *id015
+        minItems: 1
+      explicit_exclusions:
+        type: array
+        items: *id001
+      token_budget:
+        type: integer
+        minimum: 1
+      compiled_at: *id002
+      compiler_version: *id001
+      packet_hash: *id001
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - packet_id
+    - task_contract_ref
+    - selected_capability_versions
+    - acceptance_tests
+    - token_budget
+    - compiled_at
+    - compiler_version
+    - packet_hash
+    additionalProperties: false
+  CapabilityBundle:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      bundle_id: *id001
+      job_to_be_done: *id001
+      member_versions:
+        type: array
+        items: *id001
+        minItems: 1
+        uniqueItems: true
+      execution_order:
+        type: array
+        items: *id001
+        minItems: 1
+      conflict_resolution_rules:
+        type: array
+        items: *id001
+      fallback_bundle_ref:
+        type: string
+      acceptance_contract_ref: *id001
+      eval_suite_refs:
+        type: array
+        items: *id003
+        minItems: 1
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - bundle_id
+    - job_to_be_done
+    - member_versions
+    - execution_order
+    - acceptance_contract_ref
+    - eval_suite_refs
+    additionalProperties: false
+  Discriminator:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      discriminator_id: *id001
+      domain: *id001
+      decision_target: *id001
+      criteria:
+        type: array
+        items:
+          type: object
+          properties:
+            criterion_id: *id001
+            description: *id001
+            measurement: *id001
+            weight:
+              type: number
+            minimum_threshold:
+              type: number
+          required:
+          - criterion_id
+          - description
+          - measurement
+          additionalProperties: false
+        minItems: 1
+      grader_hierarchy:
+        type: array
+        items: *id001
+        minItems: 1
+      calibration_eval_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      known_biases:
+        type: array
+        items: *id001
+      abstention_conditions:
+        type: array
+        items: *id001
+        minItems: 1
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - discriminator_id
+    - domain
+    - decision_target
+    - criteria
+    - grader_hierarchy
+    - calibration_eval_refs
+    - abstention_conditions
+    additionalProperties: false
+  ModelRoute:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      route_id: *id001
+      task_family: *id001
+      privacy_level:
+        type: string
+        enum:
+        - public
+        - internal
+        - sensitive
+        - restricted
+      quality_floor:
+        type: number
+      latency_ceiling_ms:
+        type: integer
+        minimum: 0
+      cost_ceiling:
+        type: number
+        minimum: 0
+      candidate_models:
+        type: array
+        items: *id001
+        minItems: 1
+      fallback_order:
+        type: array
+        items: *id001
+        minItems: 1
+      selection_evidence_refs:
+        type: array
+        items: *id003
+      last_benchmarked_at: *id002
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - route_id
+    - task_family
+    - privacy_level
+    - candidate_models
+    - fallback_order
+    - last_benchmarked_at
+    additionalProperties: false
+  LoopPolicy:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      loop_id: *id001
+      loop_type:
+        type: string
+        enum:
+        - execution
+        - mission
+        - capability
+        - world_model
+        - governance
+        - operation
+      trigger: *id001
+      objective: *id001
+      read_zones:
+        type: array
+        items: *id001
+      write_zones:
+        type: array
+        items: *id001
+      step_budget:
+        type: integer
+        minimum: 1
+      wall_clock_budget_seconds:
+        type: integer
+        minimum: 1
+      financial_budget:
+        type: number
+        minimum: 0
+      retry_budget:
+        type: integer
+        minimum: 0
+      concurrency_limit:
+        type: integer
+        minimum: 1
+      stop_conditions:
+        type: array
+        items: *id001
+        minItems: 1
+      escalation_conditions:
+        type: array
+        items: *id001
+        minItems: 1
+      verification_contract_ref: *id001
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - loop_id
+    - loop_type
+    - trigger
+    - objective
+    - read_zones
+    - write_zones
+    - step_budget
+    - wall_clock_budget_seconds
+    - retry_budget
+    - concurrency_limit
+    - stop_conditions
+    - escalation_conditions
+    - verification_contract_ref
+    additionalProperties: false
+  LoopRun:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      loop_run_id: *id001
+      loop_policy_ref: *id003
+      trigger_ref: *id001
+      status:
+        type: string
+        enum:
+        - queued
+        - running
+        - paused
+        - blocked
+        - verifying
+        - completed
+        - failed
+        - cancelled
+        - rolled_back
+      idempotency_key: *id001
+      lease_owner:
+        type: string
+      lease_expires_at: *id002
+      checkpoint_ref:
+        type: string
+      steps_used:
+        type: integer
+        minimum: 0
+      retries_used:
+        type: integer
+        minimum: 0
+      budget_used:
+        type: object
+      started_at: *id002
+      ended_at: *id002
+      outcome_refs:
+        type: array
+        items: *id003
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - loop_run_id
+    - loop_policy_ref
+    - trigger_ref
+    - status
+    - idempotency_key
+    - steps_used
+    - retries_used
+    - budget_used
+    - started_at
+    additionalProperties: false
+  PhaseCard:
+    type: object
+    properties:
+      phase_id: *id001
+      status:
+        type: string
+        enum:
+        - locked
+        - proposed
+        - active
+        - verifying
+        - complete
+        - failed
+        - stopped
+      invariant_objective: *id001
+      why_now: *id001
+      baseline:
+        type: object
+      allowed_paths:
+        type: array
+        items: *id001
+        minItems: 1
+      forbidden_paths:
+        type: array
+        items: *id001
+        minItems: 1
+      required_deliverables:
+        type: array
+        items: *id001
+        minItems: 1
+      explicit_non_goals:
+        type: array
+        items: *id001
+        minItems: 1
+      schema_changes:
+        type: array
+        items: *id001
+      migration:
+        type: array
+        items: *id001
+      rollback:
+        type: array
+        items: *id001
+        minItems: 1
+      acceptance_commands:
+        type: array
+        items: *id001
+        minItems: 1
+      quantitative_exit_conditions:
+        type: array
+        items: *id001
+        minItems: 1
+      audit_requirements:
+        type: array
+        items: *id001
+        minItems: 1
+      next_phase_gate: *id001
+    required:
+    - phase_id
+    - status
+    - invariant_objective
+    - why_now
+    - baseline
+    - allowed_paths
+    - forbidden_paths
+    - required_deliverables
+    - explicit_non_goals
+    - rollback
+    - acceptance_commands
+    - quantitative_exit_conditions
+    - audit_requirements
+    - next_phase_gate
+    additionalProperties: false
+  ExecutionReport:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      report_id: *id001
+      phase_id: *id001
+      task_ids:
+        type: array
+        items: *id001
+      change_class:
+        type: string
+        enum:
+        - implementation
+        - domain_asset
+        - schema
+        - governance
+        - constitutional
+      files_changed:
+        type: array
+        items: *id001
+      commands_run:
+        type: array
+        items: *id001
+      test_results:
+        type: object
+      artifacts:
+        type: array
+        items: *id003
+      audit_refs:
+        type: array
+        items: *id003
+      capability_delta:
+        type: array
+        items: *id001
+      human_minutes:
+        type: number
+        minimum: 0
+      unresolved_risks:
+        type: array
+        items: *id001
+      rollback_point: *id001
+      completion_state:
+        type: string
+        enum:
+        - complete
+        - partial
+        - blocked
+        - failed
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - report_id
+    - phase_id
+    - change_class
+    - files_changed
+    - commands_run
+    - test_results
+    - unresolved_risks
+    - rollback_point
+    - completion_state
+    additionalProperties: false
+  PhaseGateDecision:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      decision_id: *id001
+      phase_id: *id001
+      next_phase_id: *id001
+      gate_result:
+        type: string
+        enum:
+        - pass
+        - fail
+        - blocked
+      disposition:
+        type: string
+        enum:
+        - approved_for_transition
+        - continue_current_phase
+        - stop_and_rollback
+      state_effect:
+        type: string
+        enum:
+        - none
+      decided_at: *id002
+      decided_by: *id001
+      decision_authority_role:
+        type: string
+        enum:
+        - owner
+        - controller
+        - delegated_controller
+      decision_authority_ref: *id001
+      executor_actor: *id001
+      verifier_actor: *id001
+      gate_reviewer_actor: *id001
+      gate_reviewer_authority_ref: *id001
+      independence_statement: *id001
+      reviewed_phase_state:
+        type: object
+        properties:
+          current_phase_status:
+            type: string
+            enum:
+            - active
+            - verifying
+          next_phase_status:
+            type: string
+            enum:
+            - locked
+          next_phase_delta_empty:
+            type: boolean
+            const: true
+          observed_at_commit: &id019
+            type: string
+            pattern: ^(?:[0-9a-f]{40}|[0-9a-f]{64})$
+          observed_tree: *id019
+        required:
+        - current_phase_status
+        - next_phase_status
+        - next_phase_delta_empty
+        - observed_at_commit
+        - observed_tree
+        additionalProperties: false
+      git_chain:
+        type: object
+        properties:
+          founding_anchor_commit: *id019
+          founding_anchor_tree: *id019
+          phase_baseline_commit: *id019
+          phase_baseline_tree: *id019
+          reviewed_implementation_commit: *id019
+          reviewed_implementation_tree: *id019
+          reviewed_closeout_commit: *id019
+          reviewed_closeout_tree: *id019
+        required:
+        - founding_anchor_commit
+        - founding_anchor_tree
+        - phase_baseline_commit
+        - phase_baseline_tree
+        - reviewed_implementation_commit
+        - reviewed_implementation_tree
+        - reviewed_closeout_commit
+        - reviewed_closeout_tree
+        additionalProperties: false
+      artifact_bindings:
+        type: object
+        properties:
+          exec_plan: &id021
+            type: object
+            properties:
+              artifact_ref: *id003
+              sha256: &id020
+                type: string
+                pattern: ^[0-9a-f]{64}$
+              blob_oid: *id019
+              containing_commit: *id019
+              reported_state: *id001
+            required:
+            - artifact_ref
+            - sha256
+            - blob_oid
+            - containing_commit
+            - reported_state
+            additionalProperties: false
+          execution_report:
+            allOf:
+            - *id021
+            - properties:
+                reported_state:
+                  type: string
+                  enum:
+                  - complete
+                  - partial
+                  - blocked
+                  - failed
+          verification_result:
+            allOf:
+            - *id021
+            - properties:
+                reported_state:
+                  type: string
+                  enum:
+                  - pass
+                  - fail
+                  - blocked
+          gate_review:
+            allOf:
+            - *id021
+            - properties:
+                reported_state:
+                  type: string
+                  enum:
+                  - pass
+                  - fail
+                  - blocked
+        required:
+        - exec_plan
+        - execution_report
+        - verification_result
+        - gate_review
+        additionalProperties: false
+      next_phase_baseline:
+        oneOf:
+        - type: object
+          properties:
+            status:
+              const: not_authorized
+          required:
+          - status
+          additionalProperties: false
+        - type: object
+          properties:
+            status:
+              const: pending_transition
+            derivation_rule:
+              const: unique_single_parent_direct_child_matching_bound_manifest
+            baseline_rule:
+              const: derived_transition_commit_is_next_phase_baseline
+            transition_manifest:
+              type: array
+              items:
+                type: object
+                properties:
+                  path: *id003
+                  change_type:
+                    type: string
+                    enum:
+                    - add
+                    - modify
+                    - delete
+                  sha256_after: *id020
+                required:
+                - path
+                - change_type
+                allOf:
+                - if:
+                    properties:
+                      change_type:
+                        enum:
+                        - add
+                        - modify
+                    required:
+                    - change_type
+                  then:
+                    required:
+                    - sha256_after
+                - if:
+                    properties:
+                      change_type:
+                        const: delete
+                    required:
+                    - change_type
+                  then:
+                    not:
+                      required:
+                      - sha256_after
+                additionalProperties: false
+              minItems: 1
+              uniqueItems: true
+          required:
+          - status
+          - derivation_rule
+          - baseline_rule
+          - transition_manifest
+          additionalProperties: false
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - decision_id
+    - phase_id
+    - gate_result
+    - disposition
+    - state_effect
+    - decided_at
+    - decided_by
+    - decision_authority_role
+    - decision_authority_ref
+    - executor_actor
+    - verifier_actor
+    - gate_reviewer_actor
+    - gate_reviewer_authority_ref
+    - independence_statement
+    - reviewed_phase_state
+    - git_chain
+    - artifact_bindings
+    - next_phase_baseline
+    allOf:
+    - if:
+        properties:
+          gate_result:
+            const: pass
+        required:
+        - gate_result
+      then:
+        required:
+        - next_phase_id
+        properties:
+          disposition:
+            const: approved_for_transition
+          state_effect:
+            const: none
+          reviewed_phase_state:
+            properties:
+              current_phase_status:
+                const: active
+              next_phase_status:
+                const: locked
+              next_phase_delta_empty:
+                const: true
+          artifact_bindings:
+            properties:
+              exec_plan:
+                properties:
+                  reported_state:
+                    const: prospective
+              execution_report:
+                properties:
+                  reported_state:
+                    const: complete
+              verification_result:
+                properties:
+                  reported_state:
+                    const: pass
+              gate_review:
+                properties:
+                  reported_state:
+                    const: pass
+          next_phase_baseline:
+            properties:
+              status:
+                const: pending_transition
+    - if:
+        properties:
+          gate_result:
+            const: blocked
+        required:
+        - gate_result
+      then:
+        properties:
+          disposition:
+            const: continue_current_phase
+          state_effect:
+            const: none
+          next_phase_baseline:
+            properties:
+              status:
+                const: not_authorized
+    - if:
+        properties:
+          gate_result:
+            const: fail
+        required:
+        - gate_result
+      then:
+        properties:
+          disposition:
+            enum:
+            - continue_current_phase
+            - stop_and_rollback
+          state_effect:
+            const: none
+          next_phase_baseline:
+            properties:
+              status:
+                const: not_authorized
+    additionalProperties: false
+  DecisionRecord:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      decision_id: *id001
+      decision_scope:
+        type: string
+        enum:
+        - constitutional
+        - governance
+        - architecture
+        - domain
+        - project
+        - mission
+      problem: *id001
+      options:
+        type: array
+        items: *id001
+        minItems: 2
+      selected_option: *id001
+      rationale: *id001
+      evidence_refs:
+        type: array
+        items: *id003
+      tradeoffs:
+        type: array
+        items: *id001
+      revisit_triggers:
+        type: array
+        items: *id001
+      decided_by: *id001
+      decided_at: *id002
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - decision_id
+    - decision_scope
+    - problem
+    - options
+    - selected_option
+    - rationale
+    - decided_by
+    - decided_at
+    additionalProperties: false
+  AuditEvent:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      audit_event_id: *id001
+      event_type:
+        type: string
+        enum:
+        - promotion
+        - rejection
+        - permission_grant
+        - permission_denial
+        - canonical_supersession
+        - schema_migration
+        - autonomy_promotion
+        - rollback
+        - public_action_approval
+        - phase_closeout
+        - emergency_stop
+        - other
+      actor: *id001
+      target_refs:
+        type: array
+        items: *id003
+        minItems: 1
+      evidence_refs:
+        type: array
+        items: *id003
+      decision: *id001
+      occurred_at: *id002
+      previous_state_ref:
+        type: string
+      new_state_ref:
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - audit_event_id
+    - event_type
+    - actor
+    - target_refs
+    - decision
+    - occurred_at
+    additionalProperties: false
+  PrincipalProfile:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      principal_id: *id001
+      domain: *id001
+      professional_level:
+        type: string
+        enum:
+        - novice
+        - apprentice
+        - practitioner
+        - professional
+        - expert
+        - principal
+        - autonomous_principal
+      competency_refs:
+        type: array
+        items: *id003
+      eval_history_refs:
+        type: array
+        items: *id003
+      market_outcome_refs:
+        type: array
+        items: *id003
+      autonomy_level: *id017
+      permission_ceiling: *id018
+      known_limits:
+        type: array
+        items: *id001
+        minItems: 1
+      escalation_policy_ref: *id001
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - principal_id
+    - domain
+    - professional_level
+    - competency_refs
+    - eval_history_refs
+    - autonomy_level
+    - permission_ceiling
+    - known_limits
+    - escalation_policy_ref
+    additionalProperties: false
+  MarketExperiment:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      experiment_id: *id001
+      mission_id: *id001
+      hypothesis_ref: *id003
+      target_segment: *id001
+      intervention: *id001
+      control_or_baseline: *id001
+      primary_metrics:
+        type: array
+        items: *id001
+        minItems: 1
+      guardrail_metrics:
+        type: array
+        items: *id001
+        minItems: 1
+      sample_plan:
+        type: object
+      start_at: *id002
+      end_at: *id002
+      pre_registered_analysis: *id001
+      result_ref:
+        type: string
+      decision_rule: *id001
+      ethics_constraints:
+        type: array
+        items: *id001
+        minItems: 1
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - experiment_id
+    - mission_id
+    - hypothesis_ref
+    - target_segment
+    - intervention
+    - control_or_baseline
+    - primary_metrics
+    - guardrail_metrics
+    - sample_plan
+    - pre_registered_analysis
+    - decision_rule
+    - ethics_constraints
+    additionalProperties: false
+  HumanTimeRecord:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      record_id: *id001
+      mission_id: *id001
+      task_id:
+        type: string
+      activity_class:
+        type: string
+        enum:
+        - strategic
+        - constitutional
+        - operational
+        - correction
+        - review
+        - waiting
+      active_minutes:
+        type: number
+        minimum: 0
+      attention_interruptions:
+        type: integer
+        minimum: 0
+      started_at: *id002
+      ended_at: *id002
+      evidence_method:
+        type: string
+        enum:
+        - timer
+        - manual
+        - estimated
+        - system_event
+      notes:
+        type: string
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - record_id
+    - mission_id
+    - activity_class
+    - active_minutes
+    - attention_interruptions
+    - started_at
+    - ended_at
+    - evidence_method
+    additionalProperties: false
+  Budget:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      budget_id: *id001
+      scope_type:
+        type: string
+        enum:
+        - task
+        - mission
+        - loop
+        - domain
+        - daily
+        - monthly
+      scope_ref: *id001
+      token_ceiling:
+        type: integer
+        minimum: 0
+      financial_ceiling:
+        type: number
+        minimum: 0
+      wall_clock_ceiling_seconds:
+        type: integer
+        minimum: 0
+      storage_ceiling_bytes:
+        type: integer
+        minimum: 0
+      network_ceiling_bytes:
+        type: integer
+        minimum: 0
+      human_minutes_ceiling:
+        type: number
+        minimum: 0
+      exceed_action:
+        type: string
+        enum:
+        - stop
+        - pause
+        - fallback
+        - escalate
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - budget_id
+    - scope_type
+    - scope_ref
+    - exceed_action
+    additionalProperties: false
+  Notification:
+    type: object
+    properties:
+      object_id: *id001
+      object_type: *id001
+      human_name: *id004
+      version: *id005
+      semantic_owner: *id001
+      lifecycle_state: *id006
+      created_at: *id002
+      created_by: *id001
+      updated_at: *id002
+      provenance_refs: *id007
+      parent_ids: *id008
+      root_origin_id: *id003
+      tags: *id009
+      visibility: *id010
+      content_ref: *id011
+      content_hash: *id013
+      status_reason: *id012
+      notification_id: *id001
+      severity:
+        type: string
+        enum:
+        - info
+        - low
+        - medium
+        - high
+        - critical
+      reason: *id001
+      authority_required:
+        type: string
+        enum:
+        - none
+        - advisory
+        - owner_decision
+        - emergency
+      related_refs:
+        type: array
+        items: *id003
+      deduplication_key: *id001
+      expires_at: *id002
+      status:
+        type: string
+        enum:
+        - queued
+        - delivered
+        - acknowledged
+        - expired
+        - suppressed
+    required:
+    - object_id
+    - object_type
+    - version
+    - semantic_owner
+    - lifecycle_state
+    - created_at
+    - created_by
+    - provenance_refs
+    - notification_id
+    - severity
+    - reason
+    - authority_required
+    - deduplication_key
+    - status
+    additionalProperties: false

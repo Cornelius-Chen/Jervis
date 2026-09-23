@@ -1,0 +1,58 @@
+version: 1
+asset_lifecycle:
+  raw:
+    authority: evidence_only
+    retrieval: provenance_only
+  quarantine:
+    authority: none
+    retrieval: restricted
+  candidate:
+    authority: experimental
+    retrieval: eval_or_shadow
+  accepted:
+    authority: advisory
+    retrieval: allowed_with_context
+  stable:
+    authority: production_eligible
+    retrieval: normal
+  canonical:
+    authority: default_long_term
+    retrieval: preferred_when_applicable
+  deprecated:
+    authority: legacy
+    retrieval: fallback_only
+  retired:
+    authority: none
+    retrieval: audit_only
+  rejected:
+    authority: none
+    retrieval: audit_only
+
+promotion_rules:
+  candidate_to_accepted:
+    requires:
+      - provenance_complete
+      - mechanism_defined
+      - applies_when_defined
+      - fails_when_defined
+      - eval_suite_linked
+      - no_critical_policy_violation
+  accepted_to_stable:
+    requires:
+      - baseline_comparison
+      - held_out_or_real_task_evidence
+      - regression_check
+      - rollback_target
+  stable_to_canonical:
+    requires:
+      - repeated_success_across_relevant_contexts
+      - no_unresolved_material_conflicts
+      - owner_or_delegated_canonical_authority
+      - versioned_promotion_record
+
+rules:
+  - raw_evidence_never_promotes_by_mutating_source_body
+  - canonical_never_silently_overwritten
+  - supersession_creates_new_version_and_link
+  - project_feedback_cannot_directly_promote_canonical
+  - stale_or_unused_assets_enter_revaluation_not_automatic_deletion
