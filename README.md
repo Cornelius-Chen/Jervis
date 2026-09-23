@@ -1,6 +1,6 @@
 # Jervis · an architecture for learning from work
 
-![Jervis research loop: source study, versioned candidate, scoped selection and evaluation](assets/jervis-research-loop.svg)
+[![Illustrated Jervis research experiment: a versioned candidate is selected for one brief, rejected for another, and dependent outputs change after a shared fact changes](assets/jervis-research-atlas.png)](assets/jervis-research-atlas.png)
 
 **Research question.** How can an AI system carry a useful judgment from one task to another while keeping its source, scope, revision and evaluation visible?
 
@@ -17,7 +17,7 @@
 | Conditional transfer | The saved candidate is selected for one fresh brief and excluded from another. | Does selection improve human-rated work beyond a direct reference? |
 | Composed execution | A field change rebuilds dependent outputs; an obsolete worker result becomes `STALE`. | Can this hold across less scripted workers and longer projects? |
 
-The diagram shows the implemented research mechanism; the executable examples and linked evidence establish which parts have been observed.
+The illustration explains the mechanism; the executable examples and linked evidence establish which parts were observed. [Editable technical sketch](assets/jervis-research-loop.svg).
 
 ## Run the complete public example
 
