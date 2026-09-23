@@ -20,12 +20,15 @@ Python 3.12 or newer is required. Chromium runs headlessly; no account, API key,
 python -m pip install ".[test]"
 python -m playwright install chromium
 python examples/run_designer_cycle.py
+python examples/run_composition_cycle.py
 python -m pytest
 ```
 
 On Linux, install Chromium's system dependencies if Playwright asks for them (`python -m playwright install --with-deps chromium`). The example writes to `.demo/designer/` and refuses to overwrite an existing nonempty run. Use `--output PATH` for another run.
 
 Open `.demo/designer/result.json` after execution. It links to the two practice pages, comparison, persisted task artifacts and browser observations. The example calls the original `Mission`, `DomainLearning`, `StateStore`, `Registry`, `EventLog`, `work_order`, `execute_tool` and `commit` paths. `examples/synthetic/responses.json` supplies fixed, visibly labeled model responses. **This run makes zero new model calls.**
+
+The second command writes `.demo/composition/result.json`. It exercises a **separate** vNext composition on fictional material with fixed model responses. It also makes zero new model calls.
 
 ### What happens inside
 
@@ -54,6 +57,22 @@ The practice and variant use the same task and button behavior; only the action'
 
 More detail: [architecture and tradeoffs](docs/architecture.md) · [Designer run and evidence](docs/case-designer.md) · [source and claim map](docs/evidence.md).
 
+## A second, independent composition run
+
+The fictional scene begins with a wood floor. The original `scene` tool produces timed contacts; the original `audio` tool renders a real WAV; `page` binds it into an HTML interaction; `compose_inspect` checks playback and seeking in Chromium. An owner-shaped synthetic intervention changes `floor.material` to gravel.
+
+| After the fact changes | Actual runtime result |
+| --- | --- |
+| Sound + page + combined observation | Rebuilt at revision 2. The WAV bytes change. |
+| Motion + independent production note | Their original result references and revisions remain. |
+| A sound worker result returned after a handoff | Commit stored it as `STALE`; a successor result was accepted. |
+
+![Actual headless-browser screenshot of the fictional composed page](assets/composition-page.png)
+
+[Hear the wood fixture](assets/composition-wood.wav) · [Hear the gravel fixture](assets/composition-gravel.wav) · [Inspect the case and its exact source entry points](docs/case-composition.md)
+
+These are procedural sounds chosen by a fixed response fixture. Their acoustic realism, design quality and human effect were not evaluated. The material change, dependency impact, versioned result references, WAV render, browser checks and stale-result rejection run through the original Mission and Toolkit code.
+
 ## Repository map
 
 ```text
@@ -62,7 +81,8 @@ src/ironman/learning/         evidence, candidate memory, source intake, workers
 src/ironman/mission/          project state, work orders, scope, Designer, execution
 schemas/ + control/          original object schema and lifecycle policy
 examples/synthetic/          self-authored pages and fixed model responses
-examples/run_designer_cycle.py  complete offline public entry point
+examples/run_designer_cycle.py  domain-learning replay
+examples/run_composition_cycle.py  independent vNext composition replay
 tests/                      original focused tests plus clean-output integration
 docs/                       architecture choices, case narrative and evidence limits
 ```
@@ -73,6 +93,6 @@ The public slice includes the real source modules needed by the run and the surr
 
 - The public run proves that the **mechanism executes** with synthetic model responses: it persists a candidate, reopens it in new projects, selects or rejects it, writes artifacts and checks browser behavior.
 - The fixed responses do not prove that a live model would make the same design judgment. Functional browser checks do not prove better design, user preference, comprehension or general capability gain.
-- The broader local Jervis system also has scoped composition, partial invalidation and worker recovery paths. Their independent public replay is a separate release slice; this Designer run does not imply those happened in the same execution.
+- The public composition replay independently verifies a field-specific invalidation, preservation of unrelated work, actual WAV and browser artifacts, and a rejected late worker result. It does not claim the Designer learning happened in the same execution.
 
 No open-source license has been selected for this public source release.
