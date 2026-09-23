@@ -1,16 +1,23 @@
-# Jervis: learning that survives a task
+# Jervis · an architecture for learning from work
 
-Jervis is an experimental architecture for turning source-bound observations into **conditional, revisable domain judgments**. A short-lived worker may propose a decision or create an artifact; the persistent project, Registry and EventLog retain the source, version, work order, result and limits of what was learned.
+![Jervis research loop: source study, versioned candidate, scoped selection and evaluation](assets/jervis-research-loop.svg)
 
-This repository is a runnable public slice of the local Jervis implementation. It focuses on Designer as the first domain example. The original Designer corpus is a separate advisory source; the single judgment in this repository is an explicitly synthetic exercise and is **not** a copy of that corpus.
+**Research question.** How can an AI system carry a useful judgment from one task to another while keeping its source, scope, revision and evaluation visible?
 
-| One run, two new tasks | Observed result |
-|---|---|
-| Workshop choice page | The persisted `choice-action-group` candidate was selected and a full HTML page was committed. |
-| Operational dispatch table | The same candidate was rejected as inapplicable; the table page was committed without it. |
-| Both pages | Headless browser checks exercised the real expanding control. Human comprehension and aesthetic effect remain unmeasured. |
+**System design.** A persistent Mission owns the work graph and contracts. Registry and EventLog retain versioned state and transitions. Short-lived workers receive scoped WorkOrders and return proposals. Designer is the first domain apprenticeship: source study and practice produce tentative design judgments that later briefs can select or reject. The original Designer corpus remains an independent advisory source.
 
-<p align="center"><img src="assets/workshop-page.png" width="48%" alt="Synthetic workshop page with the action inside its choice card"><img src="assets/dispatch-table.png" width="48%" alt="Synthetic dispatch table that did not use the card-specific judgment"></p>
+**Reproducible result.** The public offline experiment exercises the original Mission, Registry, EventLog and Designer learning path with fixed synthetic model responses. It stores one experimental judgment, uses it in a new workshop brief, rejects it for an unrelated dispatch brief, commits both HTML artifacts and verifies their controls in Chromium. A separate composition experiment changes one shared material fact, rebuilds only dependent audio/page outputs and rejects a stale worker result.
+
+**Evidence boundary.** These runs demonstrate state, scope and revision mechanics. They do not show an autonomous model discovering the judgment, a human preference gain, or a stable cross-domain capability. Historical Designer comparisons were mixed; they are distinct from the synthetic public replay.
+
+[Study the architecture](docs/architecture.md) · [Inspect the Designer experiment](docs/case-designer.md) · [Inspect the composition experiment](docs/case-composition.md) · [Check claims against source](docs/evidence.md)
+
+| Experiment | Observation | Open question |
+| --- | --- | --- |
+| Conditional transfer | The saved candidate is selected for one fresh brief and excluded from another. | Does selection improve human-rated work beyond a direct reference? |
+| Composed execution | A field change rebuilds dependent outputs; an obsolete worker result becomes `STALE`. | Can this hold across less scripted workers and longer projects? |
+
+The diagram shows the implemented research mechanism; the executable examples and linked evidence establish which parts have been observed.
 
 ## Run the complete public example
 

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 650" role="img" aria-labelledby="title desc">
+<title id="title">Jervis research loop: from source evidence to scoped judgment and later evaluation</title>
+<desc id="desc">Sources and Designer practice create an experimental candidate. A versioned Registry and EventLog retain it. Scope selection includes the candidate for one later brief and rejects it for another. Worker results are compared and reviewed before any new version decision. A separate composition path tracks dependencies and rejects stale results.</desc>
+<defs><style>
+text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#17243b}.bg{fill:#f7f8f6}.card{fill:#fff;stroke:#c9d4d9;stroke-width:2}.core{fill:#e7f0f2;stroke:#318190;stroke-width:2}.blue{fill:#e9eef9;stroke:#5875b8;stroke-width:2}.peach{fill:#fcf0e9;stroke:#ca825b;stroke-width:2}.muted{fill:#5b6977;font-size:20px}.title{font-weight:700;font-size:30px}.label{font-weight:700;font-size:24px}.small{font-size:19px}.arrow{fill:none;stroke:#5a6d7e;stroke-width:3;marker-end:url(#head)}
+</style><marker id="head" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M1 1L9 5 1 9" fill="none" stroke="#5a6d7e" stroke-width="2"/></marker></defs>
+<rect class="bg" width="1500" height="650"/><text x="64" y="62" class="title">How a judgment survives a task</text><text x="64" y="96" class="muted">Research mechanism · source bound · scoped · versioned · evaluated</text>
+<rect x="60" y="150" width="290" height="150" rx="14" class="card"/><text x="84" y="191" class="label">01  Study</text><text x="84" y="228" class="small">Admitted source + practice</text><text x="84" y="257" class="small">Designer variant + observation</text>
+<rect x="420" y="150" width="290" height="150" rx="14" class="core"/><text x="444" y="191" class="label">02  Candidate</text><text x="444" y="228" class="small">Condition + failure scope</text><text x="444" y="257" class="small">Registry version + EventLog</text>
+<rect x="780" y="150" width="300" height="150" rx="14" class="card"/><text x="804" y="191" class="label">03  New brief</text><text x="804" y="228" class="small">WorkOrder selects by scope</text><text x="804" y="257" class="small">Worker receives bounded context</text>
+<rect x="1150" y="150" width="290" height="150" rx="14" class="blue"/><text x="1174" y="191" class="label">04  Observe</text><text x="1174" y="228" class="small">Artifact + browser behavior</text><text x="1174" y="257" class="small">Comparison and review</text>
+<path d="M351 224H414M711 224H774M1081 224H1144" class="arrow"/>
+<rect x="780" y="355" width="300" height="106" rx="14" class="core"/><text x="804" y="395" class="label">Applicable brief</text><text x="804" y="426" class="small">Candidate selected</text>
+<rect x="1150" y="355" width="290" height="106" rx="14" class="peach"/><text x="1174" y="395" class="label">Other brief</text><text x="1174" y="426" class="small">Candidate rejected by scope</text>
+<path d="M900 301V348M1040 301V327H1295V348" class="arrow"/>
+<rect x="60" y="510" width="1380" height="120" rx="14" class="card"/><text x="84" y="549" class="label">Separate composition experiment</text><text x="84" y="581" class="small">Wood → gravel changes dependent audio/page; motion stays; obsolete worker result is STALE.</text><text x="84" y="612" class="muted">Public runs replay fixed synthetic model responses. Human-rated capability gain is not established.</text>
+</svg>
